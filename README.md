@@ -1,4 +1,5 @@
 # Filo
+![Filo logo](icon.ico)
 
 Filo is a simple and powerful file management tool that acts as an advanced clipboard. Drag, drop, and organize your files and folders seamlessly for quick access and use in your workflows.
 
@@ -66,5 +67,5 @@ We welcome contributions to make Filo even better! Feel free to fork the repo, m
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-### press kit 
+### FILO LOGO
 ![Filo logo](icon.ico)
