@@ -19,14 +19,31 @@ from PyQt5.QtWidgets import (
     QMessageBox,
 )
 from PyQt5.QtCore import Qt, QMimeData, QUrl
-from PyQt5.QtGui import QDrag, QPixmap
+from PyQt5.QtGui import QDrag, QPixmap,QColor, QPalette
 
 
-class FileClipboard(QMainWindow):
+class FiloApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("File Clipboard")
+        self.setWindowTitle("Filo - by Aman Verma")
         self.setGeometry(200, 200, 500, 400)
+
+        #applying color scheme
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #202020;
+                color: white;
+            }
+            QPushButton {
+                background-color: #3a3a3a;
+                border: 1px solid #444;
+                padding: 10px;
+                color: white;
+            }
+            QPushButton:hover {
+                background-color: #505050;
+            }
+        """)
         self.init_ui()
 
     def init_ui(self):
@@ -59,6 +76,7 @@ class FileClipboard(QMainWindow):
         layout.addWidget(clear_button)
 
         self.main_widget.setLayout(layout)
+
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
@@ -124,6 +142,6 @@ class FileClipboard(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = FileClipboard()
+    window = FiloApp()
     window.show()
     sys.exit(app.exec_())
