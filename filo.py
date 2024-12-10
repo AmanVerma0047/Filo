@@ -1,3 +1,11 @@
+#-----------------------------------
+#AUTHOR : AMAN VERMA
+#DATE-CREATED:10-12-2024
+#Version : 0.0.1a
+#SOFTWARE: FILO ( an open source file drop in drop out software)
+#-----------------------------------
+
+
 import sys
 import os
 from PyQt5.QtWidgets import (
