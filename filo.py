@@ -5,7 +5,6 @@
 #SOFTWARE: FILO ( an open source file drop in drop out software)
 #-----------------------------------
 
-
 import sys
 import os
 from PyQt5.QtWidgets import (
@@ -17,18 +16,19 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QFileDialog,
     QMessageBox,
+    QListWidgetItem,
 )
 from PyQt5.QtCore import Qt, QMimeData, QUrl
-from PyQt5.QtGui import QDrag, QPixmap,QColor, QPalette
+from PyQt5.QtGui import QDrag, QPixmap, QIcon
 
 
 class FiloApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Filo - by Aman Verma")
-        self.setGeometry(200, 200, 500, 400)
+        self.setGeometry(200, 200, 600, 500)
 
-        #applying color scheme
+        # Applying color scheme
         self.setStyleSheet("""
             QWidget {
                 background-color: #202020;
@@ -77,7 +77,6 @@ class FiloApp(QMainWindow):
 
         self.main_widget.setLayout(layout)
 
-
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
             event.accept()
@@ -89,7 +88,7 @@ class FiloApp(QMainWindow):
             for url in event.mimeData().urls():
                 file_path = url.toLocalFile()
                 if file_path not in self.get_all_files():
-                    self.file_list.addItem(file_path)
+                    self.add_file_item(file_path)
             event.accept()
 
     def start_drag(self, event):  # Add event as a parameter
@@ -120,11 +119,27 @@ class FiloApp(QMainWindow):
         folders = QFileDialog.getExistingDirectory(self, "Select Folder")
         if folders:
             if folders not in self.get_all_files():
-                self.file_list.addItem(folders)
+                self.add_file_item(folders)
 
         for file in files:
             if file not in self.get_all_files():
-                self.file_list.addItem(file)
+                self.add_file_item(file)
+
+    def add_file_item(self, file_path):
+        # Create a list item for each file/folder
+        list_item = QListWidgetItem(file_path)
+
+        # Set the item icon for image files
+        if file_path.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp')):
+            pixmap = QPixmap(file_path).scaled(100, 100, Qt.KeepAspectRatio)
+            list_item.setIcon(QIcon(pixmap))
+
+        # Set the tooltip to show the file's directory
+        directory = os.path.dirname(file_path)
+        list_item.setToolTip(f"Path: {directory}")
+
+        # Add the item to the list
+        self.file_list.addItem(list_item)
 
     def clear_files(self):
         confirm = QMessageBox.question(
