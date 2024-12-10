@@ -14,10 +14,13 @@ Filo is a simple and powerful file management tool that acts as an advanced clip
 
 ## Installation
 
-### Clone the Repository
+### download the files ( for windows )
 
-_git clone https://github.com/yourusername/filo.git cd filo_
+and go to _dist>filo.exe_
 
+**For linux or mac:-**
+### clone the repository 
+_git clone https://github.com/AmanVerma0047/Filo.git_
 
 ### Install Dependencies
 
