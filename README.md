@@ -65,3 +65,6 @@ We welcome contributions to make Filo even better! Feel free to fork the repo, m
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+### press kit 
+![Filo logo](assets/icon.ico)
