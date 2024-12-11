@@ -1,3 +1,9 @@
+#------------------------
+#Author:Aman Verma
+#date:11-12-2024
+#Build:v0.1.2
+#software:Filo
+#------------------------
 import sys
 import os
 import json
@@ -11,7 +17,8 @@ from PyQt5.QtWidgets import (
     QFileDialog,
     QMessageBox,
     QListWidgetItem,
-    QMenu
+    QMenu,
+    QLabel
 )
 from PyQt5.QtCore import Qt, QMimeData, QUrl
 from PyQt5.QtGui import QDrag, QPixmap, QIcon
@@ -62,27 +69,21 @@ class FiloApp(QMainWindow):
         self.file_list.setContextMenuPolicy(Qt.CustomContextMenu)
         self.file_list.customContextMenuRequested.connect(self.show_context_menu)
 
-        # Buttons
-        # add_button = QPushButton("Add Files/Folders")
-        # add_button.clicked.connect(self.add_files)
-
-        # clear_button = QPushButton("Clear Clipboard")
-        # clear_button.clicked.connect(self.clear_files)
-
-        # save_button = QPushButton("Save Workspace")
-        # save_button.clicked.connect(self.save_workspace)
-
-        # load_button = QPushButton("Load Workspace")
-        # load_button.clicked.connect(self.load_workspace)
+        # Placeholder Text
+        self.placeholder_label = QLabel("Drag files here\n<small>right click to view options</small>")
+        self.placeholder_label.setAlignment(Qt.AlignCenter)
+        self.placeholder_label.setStyleSheet("color: gray; font-size: 16px;")
+        self.placeholder_label.setTextFormat(Qt.RichText)
+        self.placeholder_label.setWordWrap(True)
 
         # Add widgets to layout
+        layout.addWidget(self.placeholder_label)
         layout.addWidget(self.file_list)
-        # layout.addWidget(add_button)
-        # layout.addWidget(clear_button)
-        # layout.addWidget(save_button)
-        # layout.addWidget(load_button)
 
         self.main_widget.setLayout(layout)
+
+        # Update placeholder visibility initially
+        self.update_placeholder_visibility()
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
@@ -97,6 +98,7 @@ class FiloApp(QMainWindow):
                 if file_path not in self.get_all_files():
                     self.add_file_item(file_path)
             event.accept()
+            self.update_placeholder_visibility()
 
     def startDrag(self, event):  # Add event as a parameter
         selected_items = self.file_list.selectedItems()
@@ -132,6 +134,8 @@ class FiloApp(QMainWindow):
             if file not in self.get_all_files():
                 self.add_file_item(file)
 
+        self.update_placeholder_visibility()
+
     def add_file_item(self, file_path):
         # Create a list item for each file/folder
         list_item = QListWidgetItem(file_path)
@@ -147,6 +151,7 @@ class FiloApp(QMainWindow):
 
         # Add the item to the list
         self.file_list.addItem(list_item)
+        self.update_placeholder_visibility()
 
     def clear_files(self):
         confirm = QMessageBox.question(
@@ -157,6 +162,7 @@ class FiloApp(QMainWindow):
         )
         if confirm == QMessageBox.Yes:
             self.file_list.clear()
+            self.update_placeholder_visibility()
 
     def get_all_files(self):
         return [self.file_list.item(i).text() for i in range(self.file_list.count())]
@@ -184,6 +190,7 @@ class FiloApp(QMainWindow):
                 self.file_list.clear()
                 for file_path in files:
                     self.add_file_item(file_path)
+            self.update_placeholder_visibility()
 
     def check_workspace_load(self):
         response = QMessageBox.question(
@@ -227,6 +234,12 @@ class FiloApp(QMainWindow):
             self.save_workspace()
         elif action == add_load_workspace:
             self.load_workspace()
+
+    def update_placeholder_visibility(self):
+        if self.file_list.count() == 0:
+            self.placeholder_label.show()
+        else:
+            self.placeholder_label.hide()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
