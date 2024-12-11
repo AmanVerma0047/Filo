@@ -4,9 +4,9 @@
 #Version : 0.0.1a
 #SOFTWARE: FILO ( an open source file drop in drop out software)
 #-----------------------------------
+
 import sys
 import os
-import json
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -21,13 +21,12 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QMimeData, QUrl
 from PyQt5.QtGui import QDrag, QPixmap, QIcon
 
+
 class FiloApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Filo - by Aman Verma")
         self.setGeometry(200, 200, 600, 500)
-
-        self.workspace_file = None
 
         # Applying color scheme
         self.setStyleSheet("""
@@ -46,7 +45,6 @@ class FiloApp(QMainWindow):
             }
         """)
         self.init_ui()
-        self.check_workspace_load()
 
     def init_ui(self):
         # Main Widget
@@ -63,7 +61,7 @@ class FiloApp(QMainWindow):
         self.file_list.setDragDropMode(QListWidget.InternalMove)
         self.file_list.dragEnterEvent = self.dragEnterEvent
         self.file_list.dropEvent = self.dropEvent
-        self.file_list.startDrag = self.startDrag
+        self.file_list.startDrag = self.start_drag  # Overriding startDrag
 
         # Buttons
         add_button = QPushButton("Add Files/Folders")
@@ -72,18 +70,10 @@ class FiloApp(QMainWindow):
         clear_button = QPushButton("Clear Clipboard")
         clear_button.clicked.connect(self.clear_files)
 
-        save_button = QPushButton("Save Workspace")
-        save_button.clicked.connect(self.save_workspace)
-
-        load_button = QPushButton("Load Workspace")
-        load_button.clicked.connect(self.load_workspace)
-
         # Add widgets to layout
         layout.addWidget(self.file_list)
         layout.addWidget(add_button)
         layout.addWidget(clear_button)
-        layout.addWidget(save_button)
-        layout.addWidget(load_button)
 
         self.main_widget.setLayout(layout)
 
@@ -101,19 +91,28 @@ class FiloApp(QMainWindow):
                     self.add_file_item(file_path)
             event.accept()
 
-    def startDrag(self, event):
+    def start_drag(self, event):  # Add event as a parameter
         selected_items = self.file_list.selectedItems()
         if not selected_items:
             return
 
+        # Prepare drag data
         drag = QDrag(self.file_list)
         mime_data = QMimeData()
 
+        # Create a list of file URLs
         file_paths = [os.path.abspath(item.text()) for item in selected_items]
         mime_data.setUrls([QUrl.fromLocalFile(file) for file in file_paths])
+
         drag.setMimeData(mime_data)
 
-        drag.exec_(Qt.CopyAction | Qt.MoveAction)
+        # Add visual feedback (optional)
+        pixmap = QPixmap(200, 50)
+        pixmap.fill(Qt.lightGray)
+        drag.setPixmap(pixmap)
+
+        # Start the drag operation
+        drag.exec_(Qt.CopyAction)
 
     def add_files(self):
         files, _ = QFileDialog.getOpenFileNames(self, "Select Files")
@@ -131,7 +130,7 @@ class FiloApp(QMainWindow):
         list_item = QListWidgetItem(file_path)
 
         # Set the item icon for image files
-        if file_path.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".bmp")):
+        if file_path.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp')):
             pixmap = QPixmap(file_path).scaled(100, 100, Qt.KeepAspectRatio)
             list_item.setIcon(QIcon(pixmap))
 
@@ -155,54 +154,6 @@ class FiloApp(QMainWindow):
     def get_all_files(self):
         return [self.file_list.item(i).text() for i in range(self.file_list.count())]
 
-    def save_workspace(self):
-        if not self.workspace_file:
-            options = QFileDialog.Options()
-            self.workspace_file, _ = QFileDialog.getSaveFileName(
-                self, "Save Workspace", "", "JSON Files (*.json)", options=options
-            )
-        if self.workspace_file:
-            with open(self.workspace_file, 'w') as file:
-                json.dump(self.get_all_files(), file)
-            QMessageBox.information(self, "Saved", "Workspace saved successfully.")
-
-    def load_workspace(self):
-        options = QFileDialog.Options()
-        workspace_file, _ = QFileDialog.getOpenFileName(
-            self, "Open Workspace", "", "JSON Files (*.json)", options=options
-        )
-        if workspace_file:
-            self.workspace_file = workspace_file
-            with open(workspace_file, 'r') as file:
-                files = json.load(file)
-                self.file_list.clear()
-                for file_path in files:
-                    self.add_file_item(file_path)
-
-    def check_workspace_load(self):
-        response = QMessageBox.question(
-            self,
-            "Load Workspace",
-            "Do you want to load a workspace?",
-            QMessageBox.Yes | QMessageBox.No
-        )
-        if response == QMessageBox.Yes:
-            self.load_workspace()
-
-    def closeEvent(self, event):
-        confirm = QMessageBox.question(
-            self,
-            "Save Workspace",
-            "Do you want to save your workspace before exiting?",
-            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
-        )
-        if confirm == QMessageBox.Yes:
-            self.save_workspace()
-            event.accept()
-        elif confirm == QMessageBox.No:
-            event.accept()
-        else:
-            event.ignore()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
