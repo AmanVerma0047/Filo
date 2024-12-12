@@ -1,0 +1,40 @@
+name: Build Filo EXE
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull request to main branch
+
+jobs:
+  build:
+    runs-on: windows-latest  # Use a Windows runner to generate the .exe
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3  # Checkout the repository code
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'  # Specify the version of Python you need
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Install dependencies from requirements.txt
+
+    - name: Install PyInstaller
+      run: pip install pyinstaller  # Install PyInstaller to convert Python to EXE
+
+    - name: Build EXE
+      run: |
+        pyinstaller --onefile filo.py  # Replace 'filo.py' with the entry point of your Filo app
+
+    - name: Upload EXE as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: filo-exe  # Name of the artifact (you can change it)
+        path: dist/filo.exe  # Path to the generated EXE file (adjust based on your app)
