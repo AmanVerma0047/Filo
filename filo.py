@@ -7,6 +7,8 @@
 import sys
 import os
 import json
+import subprocess
+import platform
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -68,7 +70,8 @@ class FiloApp(QMainWindow):
         self.file_list.startDrag = self.startDrag
         self.file_list.setContextMenuPolicy(Qt.CustomContextMenu)
         self.file_list.customContextMenuRequested.connect(self.show_context_menu)
-
+        # Connect double-click to open file
+        self.file_list.itemDoubleClicked.connect(self.open_file)
         # Placeholder Text
         self.placeholder_label = QLabel("Drag files here\n<small>right click to view options</small>")
         self.placeholder_label.setAlignment(Qt.AlignCenter)
@@ -84,6 +87,27 @@ class FiloApp(QMainWindow):
 
         # Update placeholder visibility initially
         self.update_placeholder_visibility()
+
+
+
+    def open_file(self, item):
+        # Get the file path from the clicked item
+        file_path = item.text()
+
+        # Check the operating system and open the file accordingly
+        try:
+            if platform.system() == 'Darwin':  # macOS
+                subprocess.Popen(['open', file_path])
+            elif platform.system() == 'Linux':  # Linux
+                subprocess.Popen(['xdg-open', file_path])
+            else:  # Windows
+                subprocess.Popen(['start', file_path], shell=True)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Could not open the file: {str(e)}")
+
+
+
+
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
