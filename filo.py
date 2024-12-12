@@ -1,7 +1,7 @@
 #------------------------
 #Author:Aman Verma
 #date:11-12-2024
-#Build:v0.1.2
+#Build:v0.1.3
 #software:Filo
 #------------------------
 import sys
@@ -20,7 +20,7 @@ from PyQt5.QtWidgets import (
     QMenu,
     QLabel
 )
-from PyQt5.QtCore import Qt, QMimeData, QUrl
+from PyQt5.QtCore import Qt, QMimeData, QUrl,QTimer
 from PyQt5.QtGui import QDrag, QPixmap, QIcon
 
 class FiloApp(QMainWindow):
@@ -217,6 +217,16 @@ class FiloApp(QMainWindow):
         else:
             event.ignore()
 
+    def show_temporary_message(self, message):
+        temp_label = QLabel(message, self)
+        temp_label.setStyleSheet("background-color: black; color: white; padding: 5px; border-radius: 25px;")
+        temp_label.setAlignment(Qt.AlignCenter)
+        temp_label.setGeometry((self.width() - 200) // 2, 10, 200, 30)
+        temp_label.show()
+
+        # Hide the label after 1 second
+        QTimer.singleShot(1000, temp_label.deleteLater)
+
     def show_context_menu(self, position):
         menu = QMenu()
 
@@ -224,7 +234,15 @@ class FiloApp(QMainWindow):
         clear_action = menu.addAction("Clear Clipboard")
         add_save_workspace = menu.addAction("Save Workspace")
         add_load_workspace = menu.addAction("Load Workspace")
+        always_on_top_action = menu.addAction("Show on Top")
         action = menu.exec_(self.file_list.viewport().mapToGlobal(position))
+
+        # Check if the window is already set to "Always on Top" and update the action text accordingly
+        if self.windowFlags() & Qt.WindowStaysOnTopHint:
+            always_on_top_action.setText("Disable Always on Top")
+        else:
+            always_on_top_action.setText("Enable Always on Top")
+
 
         if action == add_action:
             self.add_files()
@@ -234,12 +252,33 @@ class FiloApp(QMainWindow):
             self.save_workspace()
         elif action == add_load_workspace:
             self.load_workspace()
+        elif action == always_on_top_action:
+            self.toggle_always_on_top()
 
     def update_placeholder_visibility(self):
         if self.file_list.count() == 0:
             self.placeholder_label.show()
         else:
             self.placeholder_label.hide()
+
+    def toggle_always_on_top(self):
+        # Check current state and toggle the "Always on Top" setting
+        if self.windowFlags() & Qt.WindowStaysOnTopHint:
+            self.setWindowFlag(Qt.WindowStaysOnTopHint, False)            
+            #showing message show on top enabled
+            self.show_temporary_message("Show on Top Disabled!")
+        else:
+            self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
+            #showing message show on top enabled
+            self.show_temporary_message("Show on Top Enabled!")
+
+
+        
+        # Apply the new flag settings
+        self.show()
+
+
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -1,4 +1,4 @@
-('C:\\Users\\anush\\OneDrive\\Desktop\\PROJECT\\indropout\\Filo\\build\\filo\\PYZ-00.pyz',
+('C:\\Users\\anush\\OneDrive\\Desktop\\PROJECT\\indropout\\Filo\\build\\Filo\\PYZ-00.pyz',
  [('PyQt5',
    'C:\\Users\\anush\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\PyQt5\\__init__.py',
    'PYMODULE'),
