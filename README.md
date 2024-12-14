@@ -4,7 +4,8 @@
 Filo is a simple and powerful file management tool that acts as an advanced clipboard. Drag, drop, and organize your files and folders seamlessly for quick access and use in your workflows.
 
 ---
-[Watch the demo video on Google Drive](https://drive.google.com/open?id=1kuuWSxVZ-ItYO0GjS0VRAbD8MVFcfLs6&usp=drive_fs)
+[Watch the demo video on Google Drive](https://drive.google.com/file/d/1h1pU_vL0mxSk8xUuh6NMVcyYkNRzGeOu/view?usp=drive_link)
+
 ## Features
 
 - Drag and drop files or folders into the clipboard.  
@@ -17,7 +18,8 @@ Filo is a simple and powerful file management tool that acts as an advanced clip
 
 ### download the files ( for windows )
 
-and go to _dist>filo.exe_
+[download exe build](https://github.com/AmanVerma0047/Filo/actions/runs/12294244500/artifacts/2310845359)
+NOTE:- [BEFORE DOWNLOADING WINDOWS WILL MARK THIS FILE AS A VIRUS BECAUSE WE DONT HAVE ACQUIRED ANY CERTIFICATE ITS A FALSE MESSAGE FLAGGED BY WINDOWS.]
 
 **For linux or mac:-**
 ### clone the repository 
