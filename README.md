@@ -18,8 +18,8 @@ Filo is a simple and powerful file management tool that acts as an advanced clip
 
 ### download the files ( for windows )
 
-[download exe build](https://github.com/AmanVerma0047/Filo/actions/runs/12294244500/artifacts/2310845359)
-NOTE:- [BEFORE DOWNLOADING WINDOWS WILL MARK THIS FILE AS A VIRUS BECAUSE WE DONT HAVE ACQUIRED ANY CERTIFICATE ITS A FALSE MESSAGE FLAGGED BY WINDOWS.]
+[download exe build](https://drive.google.com/file/d/1jUL-pQMu7eMH1lo6P3UgTQF5cLcGliMC/view?usp=sharing)
+Note:- This build does not have a certificate so it will prompt the message "Windows Smart screen protected your pc {click more info} and then {run anyway}" its safe to install!
 
 **For linux or mac:-**
 ### clone the repository 
